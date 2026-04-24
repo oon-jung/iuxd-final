@@ -88,7 +88,7 @@ function Page14Monologue2({ next }) {
 }
 
 // ---------- Page 15 — Drag to Unblur (IX4) ----------
-// page15.png 를 전체 배경으로 깔고, 그 위에 blur 처리된 동일 이미지를 canvas로 그림.
+// page15_background.png 를 전체 배경으로 깔고, 그 위에 blur 처리된 동일 이미지를 canvas로 그림.
 // 드래그 시 canvas의 해당 영역을 destination-out 으로 지워서 선명한 원본이 드러남.
 function Page15Poster({ next }) {
   const canvasRef = useRef5(null);
@@ -128,8 +128,8 @@ function Page15Poster({ next }) {
     };
 
     img.onload = drawBlurred;
-    img.onerror = () => console.warn('[Page15] page15.png 로드 실패');
-    img.src = 'assets/page15.png';
+    img.onerror = () => console.warn('[Page15] page15_background.png 로드 실패');
+    img.src = 'assets/page15_background.png';
 
     const onResize = () => { if (img.complete) drawBlurred(); };
     window.addEventListener('resize', onResize);
@@ -194,7 +194,7 @@ function Page15Poster({ next }) {
   return (
     <div style={{ position: 'absolute', inset: 0, background: '#000', overflow: 'hidden' }}>
       {/* 선명한 원본 이미지 — 전체 배경 */}
-      <img src="assets/page15.png" alt=""
+      <img src="assets/page15_background.png" alt=""
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
