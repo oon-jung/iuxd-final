@@ -501,15 +501,29 @@ function Page4Gallery({ next }) {
             엄흥도와 단종의 관계는,<br/>
             시대를 넘어 <span style={{ color: '#e8b85c' }}>여전히 반복</span>되고 있습니다.
           </div>
-          <button onClick={next} style={{
-            marginTop: 56, padding: '13px 34px',
-            border: '1px solid rgba(245,234,208,0.75)',
-            background: 'rgba(245,234,208,0.08)',
-            color: '#f5ead0', fontFamily: 'var(--sans)', fontSize: 12,
-            letterSpacing: '0.28em', cursor: 'pointer',
-            backdropFilter: 'blur(8px)',
-            animation: 'fadeIn 1s ease 0.9s forwards', opacity: 0
-          }}>계속 →</button>
+          {/* 고양이 발바닥 버튼 — 원래 디자인 복구 */}
+          <button
+            onClick={next}
+            aria-label="다음"
+            style={{
+              marginTop: 56,
+              width: 84, height: 84,
+              border: 'none', background: 'transparent',
+              cursor: 'pointer', padding: 0,
+              animation: 'fadeIn 1s ease 0.9s forwards, pawPulse 2.2s ease-in-out 1.9s infinite',
+              opacity: 0,
+              filter: 'drop-shadow(0 8px 20px rgba(90,24,16,0.45))'
+            }}>
+            <svg viewBox="0 0 64 64" width="84" height="84" fill="#e8b85c" xmlns="http://www.w3.org/2000/svg">
+              {/* Main paw pad */}
+              <ellipse cx="32" cy="42" rx="13" ry="11"/>
+              {/* Toe beans */}
+              <ellipse cx="16" cy="26" rx="5.5" ry="7"/>
+              <ellipse cx="26" cy="18" rx="5" ry="6.5"/>
+              <ellipse cx="38" cy="18" rx="5" ry="6.5"/>
+              <ellipse cx="48" cy="26" rx="5.5" ry="7"/>
+            </svg>
+          </button>
         </div>
       )}
 
@@ -531,6 +545,10 @@ function Page4Gallery({ next }) {
         @keyframes cinemaTextUp {
           from { opacity: 0; transform: translateY(26px) scale(0.96); filter: blur(6px); }
           to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes pawPulse {
+          0%, 100% { transform: scale(1); }
+          50%      { transform: scale(1.08); }
         }
       `}</style>
     </div>
