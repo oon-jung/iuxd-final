@@ -196,17 +196,10 @@ function Page13Rubbing({ next }) {
       setTimeout(() => setPhase(1), 1600),
       setTimeout(() => setPhase(2), 3200),
       setTimeout(() => setPhase(3), 4800),
-      setTimeout(() => setPhase(4), 9200)  // phase 3 뒤 4.4s 후에 새 캡션
+      setTimeout(() => setPhase(4), 11000)  // 비디오가 천천히 재생되는 동안 phase 3 캡션 충분히 노출
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
-
-  // 비디오 재생 속도 — 천천히 (0.6배)
-  useEffect4(() => {
-    if (phase >= 3 && videoRef.current) {
-      videoRef.current.playbackRate = 0.6;
-    }
-  }, [phase]);
 
   // phase에 따라 고양이 크기/위치 보간
   const catScale = phase === 0 ? 0.22 : phase === 1 ? 0.50 : 0.95;
@@ -264,10 +257,17 @@ function Page13Rubbing({ next }) {
           }} />
       }
 
-      {/* phase 3+ — 비비는 영상 (천천히 재생) */}
+      {/* phase 3+ — 비비는 영상 (0.4배 재생, metadata/play 이벤트에서 속도 강제) */}
       {phase >= 3 &&
         <video ref={videoRef} src="assets/cat_happy.mp4"
           autoPlay muted loop playsInline
+          onLoadedMetadata={(e) => { e.currentTarget.playbackRate = 0.4; }}
+          onPlay={(e) => { e.currentTarget.playbackRate = 0.4; }}
+          onRateChange={(e) => {
+            if (e.currentTarget.playbackRate !== 0.4) {
+              e.currentTarget.playbackRate = 0.4;
+            }
+          }}
           style={{
             position: 'absolute', inset: 0,
             width: '100%', height: '100%',

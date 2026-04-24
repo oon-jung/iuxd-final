@@ -19,7 +19,7 @@ const PAGES = [
   { id: 11, part: 3, label: "11 Feeding",         manual: true, tone: "tone-paper-warm" },
   // Part 4 — 유대
   { id: 12, part: 4, label: "12 Diary",           manual: true, tone: "tone-paper" },
-  { id: 13, part: 4, label: "13 Rubbing",         auto: 7000,   tone: "tone-dark" },
+  { id: 13, part: 4, label: "13 Rubbing",         manual: true, tone: "tone-dark" },
   // Part 5 — 위기
   { id: 14, part: 5, label: "14 Monologue2",      manual: true, tone: "tone-dark" },
   { id: 15, part: 5, label: "15 Poster",          manual: true, tone: "tone-dark" },

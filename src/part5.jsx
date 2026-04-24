@@ -2,57 +2,87 @@
 const { useState: useState5, useEffect: useEffect5, useRef: useRef5 } = React;
 
 // ---------- Page 14 — Monologue 2 (낯선 골목) ----------
+// 검은 화면 → 이미지 천천히 emergence → 긴 딜레이 후 문구 한 줄씩 fade-in (무게감/긴장감 연출)
 function Page14Monologue2({ next }) {
-  const [rev, setRev] = useState5(0);
+  const [phase, setPhase] = useState5(0);
+  // 0: pure black
+  // 1: 이미지 fade-in 시작
+  // 2: 이미지 완전 노출 (호흡 구간)
+  // 3~5: 3줄 순차 등장
+  // 6: 버튼
+
   const lines = [
     "여느 때와 같이 고양이를 보러 가는 길,",
     "늘 만나던 골목길이",
-    "웬지 \u200B낯설게\u200B 느껴진다.",
+    "웬지 낯설게 느껴진다.",
   ];
+
   useEffect5(() => {
-    const t = lines.map((_, i) => setTimeout(() => setRev(i + 1), 800 + i * 1400));
-    return () => t.forEach(clearTimeout);
+    const timers = [
+      setTimeout(() => setPhase(1), 600),     // 검은 화면에서 0.6s 머무른 뒤 이미지 등장
+      setTimeout(() => setPhase(2), 4400),    // 이미지 완전히 드러남 (등장 3.8s)
+      setTimeout(() => setPhase(3), 6200),    // 문구 1
+      setTimeout(() => setPhase(4), 9000),    // 문구 2
+      setTimeout(() => setPhase(5), 12200),   // 문구 3
+      setTimeout(() => setPhase(6), 15500),   // 버튼
+    ];
+    return () => timers.forEach(clearTimeout);
   }, []);
+
   return (
-    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#000' }}>
+      {/* 배경 이미지 — phase 1 부터 천천히 등장 */}
       <img src="assets/page14.png" alt=""
         style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
-          animation: 'kenBurns2 14s ease-in-out infinite alternate',
-          filter: 'saturate(0.6) brightness(0.75)'
+          opacity: phase >= 1 ? 1 : 0,
+          transform: phase >= 1 ? 'scale(1.08)' : 'scale(1.02)',
+          transition: 'opacity 3.8s cubic-bezier(.4,.0,.4,1), transform 14s ease-out',
+          filter: 'saturate(0.55) brightness(0.7)',
+          willChange: 'opacity, transform'
         }} />
+
+      {/* 어두운 비네트 — 처음에는 거의 완전 검정, 이미지 드러나면서 완화 */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'radial-gradient(ellipse, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.85) 100%)'
+        background: phase >= 2
+          ? 'radial-gradient(ellipse, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.88) 100%)'
+          : 'radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.95) 100%)',
+        transition: 'background 3s ease',
+        pointerEvents: 'none'
       }} />
+
+      {/* 문구 영역 */}
       <div style={{
         position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)',
-        textAlign: 'center', width: 900,
+        textAlign: 'center', width: 900
       }}>
         {lines.map((l, i) => {
           const parts = l.split('낯설게');
+          const shown = phase >= (3 + i);
           return (
             <div key={i} style={{
-              opacity: i < rev ? 1 : 0,
-              transform: i < rev ? 'translateY(0)' : 'translateY(14px)',
-              transition: 'opacity 1.4s ease, transform 1.4s ease',
+              opacity: shown ? 1 : 0,
+              transform: shown ? 'translateY(0)' : 'translateY(18px)',
+              filter: shown ? 'blur(0)' : 'blur(4px)',
+              transition: 'opacity 2.4s cubic-bezier(.35,.1,.25,1), transform 2.4s cubic-bezier(.35,.1,.25,1), filter 2.4s ease',
               fontFamily: 'var(--serif)', fontSize: 32, color: '#f5ead0',
               lineHeight: 2.1,
+              textShadow: '0 2px 22px rgba(0,0,0,0.95)',
+              letterSpacing: '0.02em'
             }}>
               {parts.length > 1 ? (
-                <>{parts[0]}<span style={{
-                  paddingBottom: 2,
-                }}>낯설게</span>{parts[1]}</>
+                <>{parts[0]}<span style={{ paddingBottom: 2 }}>낯설게</span>{parts[1]}</>
               ) : l}
             </div>
           );
         })}
       </div>
-      {rev >= lines.length && (
+
+      {phase >= 6 && (
         <button className="next-btn" style={{ color: '#f5ead0', borderColor: '#f5ead0' }}
           onClick={next}>계속 →</button>
       )}
-      <style>{`@keyframes kenBurns2 { 0% { transform: scale(1.05); } 100% { transform: scale(1.15) translate(-1%, -1%); } }`}</style>
     </div>
   );
 }
