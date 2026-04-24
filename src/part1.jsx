@@ -58,8 +58,8 @@ function Page2Historical({ next }) {
   const [revealed, setRevealed] = useState1(0);
   const [seal, setSeal] = useState1(false);
   useEffect1(() => {
-    const timers = lines.map((_, i) => setTimeout(() => setRevealed(i + 1), 900 + i * 1100));
-    const st = setTimeout(() => setSeal(true), 900 + lines.length * 1100 + 400);
+    const timers = lines.map((_, i) => setTimeout(() => setRevealed(i + 1), 500 + i * 600));
+    const st = setTimeout(() => setSeal(true), 500 + lines.length * 600 + 300);
     return () => {timers.forEach(clearTimeout);clearTimeout(st);};
   }, []);
   return (
@@ -97,7 +97,7 @@ function Page2Historical({ next }) {
           <div key={i} style={{
             opacity: i < revealed ? 1 : 0,
             transform: i < revealed ? 'translateY(0)' : 'translateY(8px)',
-            transition: 'opacity 1.1s ease, transform 1.1s ease',
+            transition: 'opacity 0.7s ease, transform 0.7s ease',
             fontWeight: i === lines.length - 1 || i === lines.length - 2 ? 500 : 400,
             color: i === lines.length - 1 ? '#5a1810' : '#2a1d10',
             letterSpacing: '0.04em',
