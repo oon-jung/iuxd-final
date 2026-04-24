@@ -26,8 +26,4 @@ uploads/
 .env
 .env.local
 
-# Large videos — must be re-encoded (< 100MB) or hosted externally
-# Comment these out once videos are compressed / LFS set up
-assets/video1.mp4
-assets/video2.mp4
-assets/video3.mp4
+# (Videos now < 100MB after compression — tracked in repo)
