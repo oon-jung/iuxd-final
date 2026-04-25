@@ -57,6 +57,64 @@ function Page17Monologue3({ next }) {
 }
 
 // ---------- Page 18 — 3D Memory Corridor (IX5) ----------
+// 사진 액자 한 장 — 이미지 슬롯 + placeholder 폴백
+function Page18MemoryFrame({ p, op }) {
+  const [hasImg, setHasImg] = useState6(false);
+  const num = String(p.i + 1).padStart(2, '0');
+  return (
+    <div style={{
+      position: 'absolute',
+      left: '50%', top: '50%',
+      width: 420, height: 540,
+      transform: `
+        translate(-50%, -50%)
+        translateX(${p.side === 'L' ? -720 : 720}px)
+        translateY(${-20 + p.lift - 30}px)
+        translateZ(${-p.depth}px)
+        rotateY(${p.side === 'L' ? 35 : -35}deg)
+      `,
+      background: '#fbf7ea',
+      padding: 14,
+      boxShadow: '0 28px 70px rgba(0,0,0,0.65), 0 0 60px rgba(232,184,92,0.1)',
+      opacity: op,
+      transition: 'opacity 0.3s ease'
+    }}>
+      <div style={{
+        position: 'relative',
+        width: '100%', height: '82%',
+        background: 'linear-gradient(135deg, #2a2520 0%, #1a1512 100%)',
+        overflow: 'hidden'
+      }}>
+        {/* 실 이미지 슬롯 — assets/slides/page18/01.png ~ 10.png */}
+        <img
+          src={`assets/slides/page18/${num}.png`}
+          alt=""
+          onLoad={() => setHasImg(true)}
+          onError={(e) => { e.currentTarget.style.display = 'none'; setHasImg(false); }}
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%', objectFit: 'cover'
+          }}
+        />
+        {/* MEMORY 텍스트 — 이미지 없을 때만 */}
+        {!hasImg && <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'rgba(232,184,92,0.35)',
+          fontSize: 16, letterSpacing: '0.2em',
+          fontFamily: 'var(--serif)'
+        }}>
+          MEMORY {num}
+        </div>}
+      </div>
+      <div style={{ textAlign: 'center', marginTop: 10,
+                    fontFamily: 'var(--yet)', fontSize: 16, color: '#5a4520' }}>
+        · {p.i + 1} ·
+      </div>
+    </div>
+  );
+}
+
 function Page18Memory3D({ next }) {
   const [z, setZ] = useState6(0);
   const maxZ = 2400;
@@ -97,43 +155,14 @@ function Page18Memory3D({ next }) {
       }}>
         {photos.map((p) => {
           // 현재 카메라 z 기준 거리에 따른 opacity — 너무 멀거나 지나간 사진은 숨김
-          // (원근 소실점에 작게 찍혀 "노란 박스" 처럼 보이는 현상 제거)
           const dist = p.depth - z;
           let op;
-          if (dist < -120) op = 0;            // 카메라 뒤로 지나간 경우
-          else if (dist > 700) op = 0;        // 아직 너무 멀어 작은 박스처럼 보이는 경우
-          else if (dist > 500) op = (700 - dist) / 200;  // 페이드 인
-          else if (dist < 40) op = Math.max(0, (dist + 120) / 160); // 지나가며 페이드 아웃
+          if (dist < -120) op = 0;
+          else if (dist > 700) op = 0;
+          else if (dist > 500) op = (700 - dist) / 200;
+          else if (dist < 40) op = Math.max(0, (dist + 120) / 160);
           else op = 1;
-          return (
-            <div key={p.i} style={{
-              position: 'absolute',
-              left: '50%', top: '50%',
-              width: 420, height: 540,
-              transform: `
-                translate(-50%, -50%)
-                translateX(${p.side === 'L' ? -720 : 720}px)
-                translateY(${-20 + p.lift - 30}px)
-                translateZ(${-p.depth}px)
-                rotateY(${p.side === 'L' ? 35 : -35}deg)
-              `,
-              background: '#fbf7ea',
-              padding: 14,
-              boxShadow: '0 28px 70px rgba(0,0,0,0.65), 0 0 60px rgba(232,184,92,0.1)',
-              opacity: op,
-              transition: 'opacity 0.3s ease'
-            }}>
-              <div className="ph" style={{ width: '100%', height: '82%',
-                background: 'linear-gradient(135deg, #2a2520 0%, #1a1512 100%)', color: 'rgba(232,184,92,0.35)',
-                fontSize: 16, letterSpacing: '0.2em' }}>
-                MEMORY {String(p.i + 1).padStart(2, '0')}
-              </div>
-              <div style={{ textAlign: 'center', marginTop: 10,
-                            fontFamily: 'var(--yet)', fontSize: 16, color: '#5a4520' }}>
-                · {p.i + 1} ·
-              </div>
-            </div>
-          );
+          return <Page18MemoryFrame key={p.i} p={p} op={op} />;
         })}
       </div>
 

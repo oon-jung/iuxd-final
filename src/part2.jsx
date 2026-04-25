@@ -90,6 +90,67 @@ function Page7InstaStack({ next }) {
 }
 
 // ---------- Page 8 — Cat feed algorithm (Instagram Explore grid filling up) ----------
+// 한 타일: 이미지 슬롯 + 색상 폴백 (이미지 없으면 placeholder 그대로)
+function Page8FeedTile({ t, revealed }) {
+  const [hasImg, setHasImg] = useState2(false);
+  const num = String(t.i + 1).padStart(2, '0');
+  return (
+    <div style={{
+      position: 'relative',
+      background: revealed ?
+      `linear-gradient(${t.i * 45 % 360}deg, hsl(${t.hue}, 22%, ${60 + t.i % 10}%) 0%, hsl(${(t.hue + 30) % 360}, 18%, ${45 + t.i % 15}%) 100%)` :
+      '#ececec',
+      overflow: 'hidden',
+      opacity: revealed ? 1 : 0.25,
+      transform: revealed ? 'scale(1)' : 'scale(0.92)',
+      transition: 'opacity 0.5s ease, transform 0.5s ease, background 0.6s ease'
+    }}>
+      {/* 실 이미지 슬롯 — assets/slides/page8/01.png ~ 20.png */}
+      <img
+        src={`assets/slides/page8/${num}.png`}
+        alt=""
+        onLoad={() => setHasImg(true)}
+        onError={(e) => { e.currentTarget.style.display = 'none'; setHasImg(false); }}
+        style={{
+          position: 'absolute', inset: 0,
+          width: '100%', height: '100%', objectFit: 'cover',
+          opacity: revealed ? 1 : 0,
+          transition: 'opacity 0.6s ease',
+          zIndex: 1
+        }}
+      />
+      {/* Placeholder diagonal stripes — 이미지 없을 때만 */}
+      {!hasImg && <div style={{
+        position: 'absolute', inset: 0, zIndex: 2,
+        background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 8px, transparent 8px 16px)'
+      }} />}
+      {/* Label — 이미지 없을 때만 */}
+      {!hasImg && <div style={{
+        position: 'absolute', inset: 0, zIndex: 2,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: 'ui-monospace, monospace', fontSize: 10,
+        letterSpacing: '0.2em',
+        color: 'rgba(255,255,255,0.75)',
+        textShadow: '0 1px 2px rgba(0,0,0,0.2)'
+      }}>
+        🐾 #{num}
+      </div>}
+      {/* Like count corner — 항상 표시 */}
+      {revealed &&
+      <div style={{
+        position: 'absolute', bottom: 6, right: 8, zIndex: 3,
+        fontFamily: 'var(--sans)', fontSize: 9, fontWeight: 600,
+        color: 'rgba(255,255,255,0.92)',
+        letterSpacing: '0.05em',
+        textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+      }}>
+        ♡ {((t.i + 1) * 243).toLocaleString()}
+      </div>
+      }
+    </div>
+  );
+}
+
 function Page8CatFeed({ next }) {
   const scrollRef = useRef2(null);
   const [progress, setProgress] = useState2(0);
@@ -175,50 +236,9 @@ function Page8CatFeed({ next }) {
               gap: 4
             }}>
               {tiles.map((t) => {
-                // Tile appears when progress crosses its threshold
                 const threshold = t.i / (total + 2);
                 const revealed = progress > threshold;
-                const distance = Math.max(0, threshold - progress);
-                return (
-                  <div key={t.i} style={{
-                    position: 'relative',
-                    background: revealed ?
-                    `linear-gradient(${t.i * 45 % 360}deg, hsl(${t.hue}, 22%, ${60 + t.i % 10}%) 0%, hsl(${(t.hue + 30) % 360}, 18%, ${45 + t.i % 15}%) 100%)` :
-                    '#ececec',
-                    overflow: 'hidden',
-                    opacity: revealed ? 1 : 0.25,
-                    transform: revealed ? 'scale(1)' : 'scale(0.92)',
-                    transition: 'opacity 0.5s ease, transform 0.5s ease, background 0.6s ease'
-                  }}>
-                    {/* Placeholder diagonal stripes */}
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      background: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 8px, transparent 8px 16px)'
-                    }} />
-                    {/* Label */}
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontFamily: 'ui-monospace, monospace', fontSize: 10,
-                      letterSpacing: '0.2em',
-                      color: 'rgba(255,255,255,0.75)',
-                      textShadow: '0 1px 2px rgba(0,0,0,0.2)'
-                    }}>
-                      🐾 #{String(t.i + 1).padStart(2, '0')}
-                    </div>
-                    {/* Like count corner */}
-                    {revealed &&
-                    <div style={{
-                      position: 'absolute', bottom: 6, right: 8,
-                      fontFamily: 'var(--sans)', fontSize: 9, fontWeight: 600,
-                      color: 'rgba(255,255,255,0.85)',
-                      letterSpacing: '0.05em'
-                    }}>
-                        ♡ {((t.i + 1) * 243).toLocaleString()}
-                      </div>
-                    }
-                  </div>);
-
+                return <Page8FeedTile key={t.i} t={t} revealed={revealed} />;
               })}
             </div>
 

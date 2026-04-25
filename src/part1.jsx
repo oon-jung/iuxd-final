@@ -278,16 +278,17 @@ function Page4Gallery({ next }) {
   const targetRef = useRef1(0);
 
   // 9장 — 공간감 있는 깊이 배치, pet 카드가 가장 안쪽 몰입 목적지
+  // num: assets/slides/page4/{NN}.jpg 슬롯. pet=09 가 page4_final 의 자리 (마지막 등장)
   const cards = React.useMemo(() => ([
-    { id: 'grand',  x: 18, y: 30, z:  180, w: 230, h: 280, rx: -4, ry:  8 },
-    { id: 'couple', x: 82, y: 40, z:   80, w: 210, h: 260, rx:  4, ry: -8 },
-    { id: 'army',   x: 22, y: 78, z: -180, w: 190, h: 230, rx: -5, ry:  5 },
-    { id: 'parent', x: 35, y: 18, z: -420, w: 185, h: 225, rx:  3, ry: -4 },
-    { id: 'friend', x: 70, y: 22, z: -520, w: 175, h: 210, rx: -4, ry:  5 },
-    { id: 'team',   x: 88, y: 62, z: -700, w: 170, h: 200, rx:  5, ry: -4 },
-    { id: 'mentor', x: 14, y: 52, z: -950, w: 150, h: 180, rx:  3, ry:  8 },
-    { id: 'class',  x: 66, y: 78, z:-1120, w: 150, h: 180, rx:  5, ry:  4 },
-    { id: 'pet',    x: 50, y: 50, z:-1550, w: 340, h: 430, rx:  0, ry:  0, main: true }
+    { id: 'grand',  num: '01', x: 18, y: 30, z:  180, w: 230, h: 280, rx: -4, ry:  8 },
+    { id: 'couple', num: '02', x: 82, y: 40, z:   80, w: 210, h: 260, rx:  4, ry: -8 },
+    { id: 'army',   num: '03', x: 22, y: 78, z: -180, w: 190, h: 230, rx: -5, ry:  5 },
+    { id: 'parent', num: '04', x: 35, y: 18, z: -420, w: 185, h: 225, rx:  3, ry: -4 },
+    { id: 'friend', num: '05', x: 70, y: 22, z: -520, w: 175, h: 210, rx: -4, ry:  5 },
+    { id: 'team',   num: '06', x: 88, y: 62, z: -700, w: 170, h: 200, rx:  5, ry: -4 },
+    { id: 'mentor', num: '07', x: 14, y: 52, z: -950, w: 150, h: 180, rx:  3, ry:  8 },
+    { id: 'class',  num: '08', x: 66, y: 78, z:-1120, w: 150, h: 180, rx:  5, ry:  4 },
+    { id: 'pet',    num: '09', x: 50, y: 50, z:-1550, w: 340, h: 430, rx:  0, ry:  0, main: true }
   ]), []);
 
   // 이벤트 리스너 — focused/zoomIn ref 로 읽어 리스너 재바인딩 최소화
@@ -462,6 +463,22 @@ function Page4Gallery({ next }) {
                   : '1px solid rgba(255,255,255,0.18)',
                 position: 'relative'
               }}>
+                {/* 실 이미지 — assets/slides/page4/{num}.jpg, 로드 실패 시 그라디언트 폴백 */}
+                <img
+                  src={`assets/slides/page4/${c.num}.jpg`}
+                  alt=""
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  style={{
+                    position: 'absolute', inset: 0,
+                    width: '100%', height: '100%',
+                    objectFit: 'cover', objectPosition: 'center',
+                    display: 'block',
+                    /* 비메인은 세피아 톤, 메인은 풀컬러 + 약한 따뜻한 톤 */
+                    filter: isMain
+                      ? 'saturate(1.05) contrast(1.04)'
+                      : 'sepia(0.42) saturate(0.85) contrast(0.96) brightness(0.96)'
+                  }}
+                />
                 {/* 톤 오버레이 */}
                 <div style={{
                   position: 'absolute', inset: 0,
