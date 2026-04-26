@@ -2,6 +2,55 @@
 const { useState: useState4, useEffect: useEffect4, useRef: useRef4 } = React;
 
 // ---------- Page 12 — Horizontal Diary (IX3) ----------
+// Photo card 한 장 — 16:9 landscape 사진 슬롯 + 텍스트 라벨 폴백
+function Page12PhotoCard({ entry, idx }) {
+  const [hasImg, setHasImg] = useState4(false);
+  const num = String(idx + 1).padStart(2, '0');
+  return (
+    <div style={{
+      width: 540, height: 400,
+      background: '#ffffff',
+      padding: 14,
+      boxShadow: '0 24px 60px rgba(60,40,20,0.25)',
+      transform: `rotate(${idx % 2 === 0 ? -2 : 2}deg)`,
+      flexShrink: 0
+    }}>
+      <div style={{
+        position: 'relative',
+        width: '100%', height: '82%',
+        background: '#f0e8d8',
+        overflow: 'hidden'
+      }}>
+        {/* 실 이미지 슬롯 — assets/slides/page12/01.png ~ 04.png (16:9 landscape) */}
+        <img
+          src={`assets/slides/page12/${num}.png`}
+          alt=""
+          onLoad={() => setHasImg(true)}
+          onError={(e) => { e.currentTarget.style.display = 'none'; setHasImg(false); }}
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%', objectFit: 'cover'
+          }}
+        />
+        {/* 라벨 폴백 — 이미지 없을 때만 */}
+        {!hasImg && <div className="ph" style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'rgba(60,40,20,0.45)'
+        }}>
+          {entry.image}
+        </div>}
+      </div>
+      <div style={{
+        textAlign: 'center', marginTop: 12,
+        fontFamily: 'var(--yet)', fontSize: 16, color: '#5a4520'
+      }}>
+        {entry.date}
+      </div>
+    </div>
+  );
+}
+
 function Page12Diary({ next }) {
   const entries = [
     {
@@ -94,32 +143,13 @@ function Page12Diary({ next }) {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat'
           }}>
-            {/* Photo */}
-            <div style={{
-              width: 440, height: 540,
-              background: '#ffffff',
-              padding: 14,
-              boxShadow: '0 24px 60px rgba(60,40,20,0.25)',
-              transform: `rotate(${i % 2 === 0 ? -2 : 2}deg)`,
-            }}>
-              <div className="ph" style={{
-                width: '100%', height: '85%', background: e.tone,
-                color: 'rgba(60,40,20,0.45)'
-              }}>
-                {e.image}
-              </div>
-              <div style={{
-                textAlign: 'center', marginTop: 14,
-                fontFamily: 'var(--yet)', fontSize: 14, color: '#5a4520'
-              }}>
-                {e.date}
-              </div>
-            </div>
+            {/* Photo — 16:9 landscape 사진 + 날짜 */}
+            <Page12PhotoCard entry={e} idx={i} />
             {/* Diary text — 배경/타이틀/세로선 제거, 우측으로 더 이동, 글자 크기 키움 */}
             <div style={{
               width: 560, position: 'relative',
               padding: '48px 40px 48px 56px',
-              marginLeft: 220,
+              marginLeft: 120,
             }}>
               <div style={{
                 fontFamily: 'var(--serif)', fontSize: 27, lineHeight: 2.0,

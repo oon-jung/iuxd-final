@@ -57,7 +57,7 @@ function Page17Monologue3({ next }) {
 }
 
 // ---------- Page 18 — 3D Memory Corridor (IX5) ----------
-// 사진 액자 한 장 — 이미지 슬롯 + placeholder 폴백
+// 사진 액자 한 장 — 16:9 landscape (page18 소스가 모두 가로형 추억회상 일러스트)
 function Page18MemoryFrame({ p, op }) {
   const [hasImg, setHasImg] = useState6(false);
   const num = String(p.i + 1).padStart(2, '0');
@@ -65,10 +65,10 @@ function Page18MemoryFrame({ p, op }) {
     <div style={{
       position: 'absolute',
       left: '50%', top: '50%',
-      width: 420, height: 540,
+      width: 600, height: 420,
       transform: `
         translate(-50%, -50%)
-        translateX(${p.side === 'L' ? -720 : 720}px)
+        translateX(${p.side === 'L' ? -780 : 780}px)
         translateY(${-20 + p.lift - 30}px)
         translateZ(${-p.depth}px)
         rotateY(${p.side === 'L' ? 35 : -35}deg)
@@ -81,11 +81,11 @@ function Page18MemoryFrame({ p, op }) {
     }}>
       <div style={{
         position: 'relative',
-        width: '100%', height: '82%',
+        width: '100%', height: '78%',
         background: 'linear-gradient(135deg, #2a2520 0%, #1a1512 100%)',
         overflow: 'hidden'
       }}>
-        {/* 실 이미지 슬롯 — assets/slides/page18/01.png ~ 10.png */}
+        {/* 실 이미지 슬롯 — assets/slides/page18/01.png ~ 10.png (16:9 landscape) */}
         <img
           src={`assets/slides/page18/${num}.png`}
           alt=""
@@ -107,8 +107,8 @@ function Page18MemoryFrame({ p, op }) {
           MEMORY {num}
         </div>}
       </div>
-      <div style={{ textAlign: 'center', marginTop: 10,
-                    fontFamily: 'var(--yet)', fontSize: 16, color: '#5a4520' }}>
+      <div style={{ textAlign: 'center', marginTop: 12,
+                    fontFamily: 'var(--yet)', fontSize: 18, color: '#5a4520' }}>
         · {p.i + 1} ·
       </div>
     </div>

@@ -223,13 +223,16 @@ function Page8CatFeed({ next }) {
             </div>
           </div>
 
-          {/* Right column — Explore grid filling up */}
+          {/* Right column — Explore grid filling up. 5×4 = 20 tiles, each 2:3 portrait */}
           <div style={{
             flex: 1, height: '100%', position: 'relative',
-            padding: '40px 40px 40px 0'
+            padding: '24px 24px 24px 0',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}>
             <div style={{
-              width: '100%', height: '100%',
+              /* 5/6 aspect 컨테이너 → 안쪽 셀이 (5/5):(6/4) = 2:3 portrait 가 됨 */
+              aspectRatio: '5 / 6',
+              height: '100%', maxWidth: '100%',
               display: 'grid',
               gridTemplateColumns: `repeat(${cols}, 1fr)`,
               gridTemplateRows: `repeat(${rows}, 1fr)`,
