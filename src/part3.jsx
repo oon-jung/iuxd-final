@@ -34,7 +34,7 @@ function Page9Video1({ next }) {
 
 // ---------- Page 10 — Monologue 1 ----------
 function Page10Monologue1({ next }) {
-  const text = "오 좀 귀여운데?\n얘 꼬셔서 데려다 키우면\n나도 스타가 될지도 모르겠는 걸!";
+  const text = "좀 귀여운데?\n얘 꼬셔서 데려다 키우면\n나도 스타 될 수 있으려나?";
   const [typed, setTyped] = useState3("");
   useEffect3(() => {
     let i = 0;
